@@ -9,7 +9,7 @@ class KiteClass
     private int iCentreY = 80;
     private int iTailLength = 80;
     private Color iColour = Color.black;
-    private char stringDirection[] = {"N", "E", "S", "W"};
+    private char[] stringDirection = {'N', 'E', 'S', 'W'};
     private int d = 2;
 
     public void setWidth (int iNewWidth)
@@ -80,6 +80,43 @@ class KiteClass
     }
 
 
+    public void draw (Console c, char stringDir)
+    {
+	int iPointsX[] = new int [4];
+	int iPointsY[] = new int [4];
+
+	iPointsX [0] = iCentreX - iWidth / 2;
+	iPointsY [0] = iCentreY;
+	iPointsX [1] = iCentreX;
+	iPointsY [1] = iCentreY - iHeight / 2;
+	iPointsX [2] = iCentreX + iWidth / 2;
+	iPointsY [2] = iCentreY;
+	iPointsX [3] = iCentreX;
+	iPointsY [3] = iCentreY + iHeight / 2;
+
+	c.setColor (iColour);
+
+	c.fillPolygon (iPointsX, iPointsY, 4);
+
+	if (stringDir == stringDirection[0])
+	{
+	    c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY + (iHeight / 2) + iTailLength);
+	}
+	else if (stringDir == stringDirection[1])
+	{
+	    c.drawLine (iCentreX, iCentreY, iCentreX + (iWidth / 2) + iTailLength, iCentreY);
+	}
+	else if (stringDir == stringDirection[2])
+	{
+	    c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY - (iHeight / 2) - iTailLength);
+	}
+	else
+	{
+	    c.drawLine (iCentreX, iCentreY, iCentreX - (iWidth / 2) - iTailLength, iCentreY);
+	}
+    }
+
+
     public void draw (Console c)
     {
 	int iPointsX[] = new int [4];
@@ -98,22 +135,9 @@ class KiteClass
 
 	c.fillPolygon (iPointsX, iPointsY, 4);
 
-	if (stringDirection [d] == "N")
-	{
-	    c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY + (iHeight / 2) + iTailLength);
-	}
-	else if (stringDirection [d] == "E")
-	{
-	    c.drawLine (iCentreX, iCentreY, iCentreX + (iWidth / 2) + iTailLength, iCentreY);
-	}
-	else if (stringDirection [d] == "S")
-	{
-	    c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY - (iHeight / 2) - iTailLength);
-	}
-	else
-	{
-	    c.drawLine (iCentreX, iCentreY, iCentreX - (iWidth / 2) - iTailLength, iCentreY);
-	}
+
+	c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY - (iHeight / 2) - iTailLength);
+	d = 2;
     }
 
 
@@ -131,7 +155,8 @@ class KiteClass
 	    {
 		d = d + 1;
 	    }
-	    draw (c);
+	    erase(c);
+	    draw (c, stringDirection [d]);
 	}
 	else if (cwccw == "ccw")
 	{
@@ -145,7 +170,26 @@ class KiteClass
 	    {
 		d = d - 1;
 	    }
-	    draw (c);
+	    erase(c);
+	    draw (c, stringDirection [d]);
 	}
+    }
+    
+    public void erase (Console c)
+    {
+	Color cOldColour = getColour ();
+	iColour = Color.white;
+	delay (3000);
+	draw (c);
+	iColour = cOldColour;
+    }
+    
+    public void delay (int iDelayTime)
+    {
+	long lFinalTime = System.currentTimeMillis () + iDelayTime;
+	do
+	{
+	}
+	while (lFinalTime >= System.currentTimeMillis ());
     }
 }

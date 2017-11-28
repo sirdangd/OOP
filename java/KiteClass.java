@@ -9,7 +9,8 @@ class KiteClass
     private int iCentreY = 80;
     private int iTailLength = 80;
     private Color iColour = Color.black;
-    private char stringDirection[] = {"N", "E", "S", "W"}; 
+    private char stringDirection[] = {"N", "E", "S", "W"};
+    private int d = 2;
 
     public void setWidth (int iNewWidth)
     {
@@ -72,11 +73,13 @@ class KiteClass
 	return iTailLength;
     }
 
+
     public Color getColour ()
     {
 	return iColour;
     }
-    
+
+
     public void draw (Console c)
     {
 	int iPointsX[] = new int [4];
@@ -91,20 +94,58 @@ class KiteClass
 	iPointsX [3] = iCentreX;
 	iPointsY [3] = iCentreY + iHeight / 2;
 
-	c.setColor (cColor);
-	if (filled)
+	c.setColor (iColour);
+
+	c.fillPolygon (iPointsX, iPointsY, 4);
+
+	if (stringDirection [d] == "N")
 	{
-	    c.fillPolygon (iPointsX, iPointsY, 4);
+	    c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY + (iHeight / 2) + iTailLength);
+	}
+	else if (stringDirection [d] == "E")
+	{
+	    c.drawLine (iCentreX, iCentreY, iCentreX + (iWidth / 2) + iTailLength, iCentreY);
+	}
+	else if (stringDirection [d] == "S")
+	{
+	    c.drawLine (iCentreX, iCentreY, iCentreX, iCentreY - (iHeight / 2) - iTailLength);
 	}
 	else
 	{
-	    c.drawPolygon (iPointsX, iPointsY, 4);
+	    c.drawLine (iCentreX, iCentreY, iCentreX - (iWidth / 2) - iTailLength, iCentreY);
 	}
     }
-    public void rotate (Console c)
+
+
+    public void rotate (Console c, String cwccw)
     {
-	iWidth = iHeight;
-	iHeight = iWidth;
-	draw(c)
+	if (cwccw == "cw")
+	{
+	    iWidth = iHeight;
+	    iHeight = iWidth;
+	    if (d > 3)
+	    {
+		d = 0;
+	    }
+	    else
+	    {
+		d = d + 1;
+	    }
+	    draw (c);
+	}
+	else if (cwccw == "ccw")
+	{
+	    iWidth = iHeight;
+	    iHeight = iWidth;
+	    if (d < 0)
+	    {
+		d = 3;
+	    }
+	    else
+	    {
+		d = d - 1;
+	    }
+	    draw (c);
+	}
     }
 }
